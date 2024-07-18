@@ -2,7 +2,7 @@
 
 use starknet::ContractAddress;
 
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 #[derive(Copy, Drop, Serde)]
 struct ERC20Balance {
     #[key]
@@ -12,7 +12,7 @@ struct ERC20Balance {
     amount: u256,
 }
 
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 #[derive(Copy, Drop, Serde)]
 struct ERC20Allowance {
     #[key]
@@ -24,7 +24,7 @@ struct ERC20Allowance {
     amount: u256,
 }
 
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 #[derive(Copy, Drop, Serde)]
 struct ERC20Meta {
     #[key]

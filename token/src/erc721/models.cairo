@@ -2,7 +2,7 @@
 
 use starknet::ContractAddress;
 
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 #[derive(Copy, Drop, Serde)]
 struct ERC721Meta {
     #[key]
@@ -12,7 +12,7 @@ struct ERC721Meta {
     base_uri: felt252,
 }
 
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 #[derive(Copy, Drop, Serde)]
 struct ERC721OperatorApproval {
     #[key]
@@ -24,7 +24,7 @@ struct ERC721OperatorApproval {
     approved: bool
 }
 
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 #[derive(Copy, Drop, Serde)]
 struct ERC721Owner {
     #[key]
@@ -34,7 +34,7 @@ struct ERC721Owner {
     address: ContractAddress
 }
 
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 #[derive(Model, Copy, Drop, Serde)]
 struct ERC721Balance {
     #[key]
@@ -44,7 +44,7 @@ struct ERC721Balance {
     amount: u256,
 }
 
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 #[derive(Copy, Drop, Serde)]
 struct ERC721TokenApproval {
     #[key]
