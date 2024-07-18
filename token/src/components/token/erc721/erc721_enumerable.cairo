@@ -5,7 +5,7 @@ use starknet::ContractAddress;
 ///
 ///
 
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 #[derive(Copy, Drop, Serde)]
 struct ERC721EnumerableIndexModel {
     #[key]
@@ -16,7 +16,7 @@ struct ERC721EnumerableIndexModel {
 }
 
 #[derive(Copy, Drop, Serde)]
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 struct ERC721EnumerableOwnerIndexModel {
     #[key]
     token: ContractAddress,
@@ -28,7 +28,7 @@ struct ERC721EnumerableOwnerIndexModel {
 }
 
 #[derive(Copy, Drop, Serde)]
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 struct ERC721EnumerableTokenModel {
     #[key]
     token: ContractAddress,
@@ -38,7 +38,7 @@ struct ERC721EnumerableTokenModel {
 }
 
 #[derive(Copy, Drop, Serde)]
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 struct ERC721EnumerableOwnerTokenModel {
     #[key]
     token: ContractAddress,
@@ -50,7 +50,7 @@ struct ERC721EnumerableOwnerTokenModel {
 }
 
 #[derive(Copy, Drop, Serde)]
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 struct ERC721EnumerableTotalModel {
     #[key]
     token: ContractAddress,

@@ -35,7 +35,7 @@ struct ERC721Owner {
 }
 
 #[dojo::model(namespace: "origami_token")]
-#[derive(Model, Copy, Drop, Serde)]
+#[derive(Copy, Drop, Serde)]
 struct ERC721Balance {
     #[key]
     token: ContractAddress,

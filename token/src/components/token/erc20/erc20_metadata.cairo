@@ -4,7 +4,7 @@ use starknet::ContractAddress;
 /// Model
 ///
 
-#[dojo::model]
+#[dojo::model(namespace: "origami_token")]
 #[derive(Drop, Serde)]
 struct ERC20MetadataModel {
     #[key]
