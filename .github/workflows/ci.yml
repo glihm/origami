@@ -28,7 +28,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Build
         run: |
-          sozo build --manifest-path crates/Scarb.toml
+          scarb --manifest-path crates/Scarb.toml build
           sozo build --manifest-path token/Scarb.toml
           sozo build --manifest-path governance/Scarb.toml
           sozo build --manifest-path examples/chess/Scarb.toml
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - name: Test
-        run: sozo test --manifest-path crates/Scarb.toml
+        run: scarb --manifest-path crates/Scarb.toml test
         shell: bash
 
   token:

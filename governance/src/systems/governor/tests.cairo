@@ -21,9 +21,11 @@ fn test_set_proposal_params() {
     let (systems, world) = testing::setup();
 
     set_contract_address(testing::GOVERNOR());
-    systems.governor.set_proposal_params(QUORUM, THRESHOLD, DELAY, PERIOD);
+    let target_selector = selector_from_tag!("governance-governor");
+    systems.governor.set_proposal_params(target_selector, QUORUM, THRESHOLD, DELAY, PERIOD);
 
-    let new_proposal_params = get!(world, systems.governor.contract_address, ProposalParams);
+    let new_proposal_params = get!(world, target_selector, ProposalParams);
+    assert!(new_proposal_params.target_selector == target_selector);
     assert!(new_proposal_params.quorum_votes == QUORUM);
     assert!(new_proposal_params.threshold == THRESHOLD);
     assert!(new_proposal_params.voting_delay == DELAY);
@@ -35,21 +37,21 @@ fn test_propose() {
     let (systems, world) = testing::setup();
 
     set_contract_address(testing::GOVERNOR());
-    systems.governor.set_proposal_params(QUORUM, THRESHOLD, DELAY, PERIOD);
+    let target_selector = selector_from_tag!("governance-governor");
+    systems.governor.set_proposal_params(target_selector, QUORUM, THRESHOLD, DELAY, PERIOD);
     systems.token.delegate(testing::ACCOUNT_1());
 
-    let proposal_target: starknet::ContractAddress = 'target'.try_into().unwrap();
     let proposal_class_hash: starknet::ClassHash = 'new_class_hash'.try_into().unwrap();
 
     set_contract_address(testing::ACCOUNT_1());
 
     set_block_timestamp('ts1');
-    systems.governor.propose(proposal_target, proposal_class_hash);
+    systems.governor.propose(target_selector, proposal_class_hash);
 
-    assert!(get!(world, systems.governor.contract_address, ProposalCount).count == 1);
-    let proposal = get!(world, 1, Proposals).proposal;
+    assert!(get!(world, target_selector, ProposalCount).count == 1);
+    let proposal = get!(world, target_selector, Proposals).proposal;
     assert!(proposal.proposer == testing::ACCOUNT_1(), "proposer is not correct");
-    assert!(proposal.target == proposal_target, "target is not correct");
+    assert!(proposal.target_selector == target_selector, "target is not correct");
     assert!(proposal.class_hash == proposal_class_hash, "class_hash is not correct");
     assert!(proposal.start_block == 'ts1' + DELAY, "start_block is not correct");
     assert!(proposal.end_block == 'ts1' + DELAY + PERIOD, "end_block is not correct");
@@ -58,11 +60,11 @@ fn test_propose() {
 #[test]
 fn test_cast_vote() {
     let (systems, world) = testing::setup();
-    let proposal_target: starknet::ContractAddress = 'target'.try_into().unwrap();
+    let proposal_target = selector_from_tag!("governance-governor");
     let proposal_class_hash: starknet::ClassHash = 'new_class_hash'.try_into().unwrap();
 
     set_contract_address(testing::GOVERNOR());
-    systems.governor.set_proposal_params(QUORUM, THRESHOLD, DELAY, PERIOD);
+    systems.governor.set_proposal_params(proposal_target, QUORUM, THRESHOLD, DELAY, PERIOD);
 
     systems.token.transfer(testing::ACCOUNT_1(), 200);
     systems.token.transfer(testing::ACCOUNT_2(), 100);
@@ -91,11 +93,11 @@ fn test_cast_vote() {
 #[test]
 fn test_queue_proposal() {
     let (systems, world) = testing::setup();
-    let proposal_target: starknet::ContractAddress = 'target'.try_into().unwrap();
+    let proposal_target = selector_from_tag!("governance-governor");
     let proposal_class_hash: starknet::ClassHash = 'new_class_hash'.try_into().unwrap();
 
     set_contract_address(testing::GOVERNOR());
-    systems.governor.set_proposal_params(QUORUM, THRESHOLD, DELAY, PERIOD);
+    systems.governor.set_proposal_params(proposal_target, QUORUM, THRESHOLD, DELAY, PERIOD);
 
     systems.token.transfer(testing::ACCOUNT_1(), 200);
     systems.token.transfer(testing::ACCOUNT_2(), 100);
@@ -122,9 +124,10 @@ fn test_execute_proposal() {
     let (systems, world) = testing::setup();
     systems.mock.increase_balance(1000);
     let proposal_class_hash = hellostarknetupgraded::TEST_CLASS_HASH.try_into().unwrap();
+    let proposal_target = selector_from_tag!("governance-governor");
 
     set_contract_address(testing::GOVERNOR());
-    systems.governor.set_proposal_params(QUORUM, THRESHOLD, DELAY, PERIOD);
+    systems.governor.set_proposal_params(proposal_target, QUORUM, THRESHOLD, DELAY, PERIOD);
 
     systems.token.transfer(testing::ACCOUNT_1(), 200);
     systems.token.transfer(testing::ACCOUNT_2(), 100);
@@ -134,7 +137,7 @@ fn test_execute_proposal() {
     set_contract_address(testing::ACCOUNT_1());
     systems.token.delegate(testing::ACCOUNT_1());
     set_block_timestamp('ts1');
-    systems.governor.propose(systems.mock.contract_address, proposal_class_hash);
+    systems.governor.propose(proposal_target, proposal_class_hash);
     set_block_timestamp('ts1' + DELAY + 1);
     systems.governor.cast_vote(1, Support::For);
     set_contract_address(testing::ACCOUNT_2());

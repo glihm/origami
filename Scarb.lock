@@ -27,51 +27,10 @@ version = "0.7.3"
 source = "git+https://github.com/dojoengine/dojo?rev=d90b52b#d90b52b89749ac8af82f352dc08aa0b1378cfae6"
 
 [[package]]
-name = "governance"
-version = "0.0.0"
-dependencies = [
- "dojo",
-]
-
-[[package]]
-name = "hex_map"
-version = "0.0.0"
-dependencies = [
- "cubit",
- "dojo",
- "origami",
-]
-
-[[package]]
-name = "market"
-version = "0.0.0"
-dependencies = [
- "cubit",
- "dojo",
-]
-
-[[package]]
-name = "matchmaker"
-version = "0.0.0"
-dependencies = [
- "dojo",
- "origami",
-]
-
-[[package]]
 name = "origami"
 version = "0.1.0"
 dependencies = [
  "cubit",
-]
-
-[[package]]
-name = "projectile"
-version = "0.0.0"
-dependencies = [
- "cubit",
- "dojo",
- "origami",
 ]
 
 [[package]]

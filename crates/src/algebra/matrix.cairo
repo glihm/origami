@@ -30,7 +30,7 @@ trait MatrixTrait<T> {
 impl MatrixImpl<
     T,
     +Mul<T>,
-    +Div<T>,
+    +core::traits::Div<T>,
     +Add<T>,
     +core::ops::AddAssign<T, T>,
     +Sub<T>,
@@ -296,7 +296,7 @@ mod tests {
         let rows: u8 = 3;
         let cols: u8 = 4;
         let values: Array<i128> = array![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-        let mut matrix: Matrix = MatrixTrait::new(values.span(), rows, cols);
+        let mut matrix: Matrix<i128> = MatrixTrait::new(values.span(), rows, cols);
         assert(matrix.get(0, 1) == 2, 'Matrix: get failed');
         assert(matrix.get(2, 3) == 12, 'Matrix: get failed');
     }

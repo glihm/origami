@@ -18,7 +18,7 @@ mod tests {
             piece::TEST_CLASS_HASH
         ];
         // deploy world with models
-        let world = spawn_test_world(models);
+        let world = spawn_test_world("chess", models);
 
         // deploy systems contract
         let contract_address = world
