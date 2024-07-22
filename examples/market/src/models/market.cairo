@@ -344,7 +344,7 @@ mod tests {
         let _expected_liquidity = FixedTrait::sqrt(expected_amount * expected_quantity);
 
         let _final_liquidity = initial_liquidity + liquidity_add;
-    // assert_precise(expected_liquidity, final_liquidity.into(), 'wrong liquidity',
+        // assert_precise(expected_liquidity, final_liquidity.into(), 'wrong liquidity',
     // Option::None(()));
     }
 
@@ -387,7 +387,7 @@ mod tests {
         let _expected_liquidity = FixedTrait::sqrt(expected_amount * expected_quantity);
 
         let _final_liquidity = initial_liquidity - liquidity_remove;
-    // assert_precise(expected_liquidity, final_liquidity.into(), 'wrong liquidity',
+        // assert_precise(expected_liquidity, final_liquidity.into(), 'wrong liquidity',
     // Option::None(()));
     }
 
