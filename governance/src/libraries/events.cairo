@@ -1,8 +1,9 @@
 mod tokenevents {
     use starknet::ContractAddress;
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct DelegateChanged {
         #[key]
         delegator: ContractAddress,
@@ -10,8 +11,9 @@ mod tokenevents {
         to: ContractAddress,
     }
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct DelegateVotesChanged {
         #[key]
         delegatee: ContractAddress,
@@ -19,8 +21,9 @@ mod tokenevents {
         new_balance: u128,
     }
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct Transfer {
         #[key]
         from: ContractAddress,
@@ -28,8 +31,9 @@ mod tokenevents {
         amount: u128,
     }
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct Approval {
         #[key]
         owner: ContractAddress,
@@ -41,24 +45,27 @@ mod tokenevents {
 mod timelockevents {
     use starknet::{ContractAddress, ClassHash};
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct NewAdmin {
         #[key]
         contract: ContractAddress,
         address: ContractAddress,
     }
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct NewDelay {
         #[key]
         contract: ContractAddress,
         value: u64,
     }
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct CancelTransaction {
         #[key]
         target: ContractAddress,
@@ -66,8 +73,9 @@ mod timelockevents {
         eta: u64,
     }
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct ExecuteTransaction {
         #[key]
         target: ContractAddress,
@@ -75,8 +83,9 @@ mod timelockevents {
         eta: u64,
     }
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct QueueTransaction {
         #[key]
         target: ContractAddress,
@@ -89,8 +98,9 @@ mod governorevents {
     use governance::models::governor::Support;
     use starknet::{ContractAddress, ClassHash};
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct ProposalCreated {
         #[key]
         id: usize,
@@ -101,8 +111,9 @@ mod governorevents {
         end_block: u64,
     }
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct VoteCast {
         #[key]
         voter: ContractAddress,
@@ -111,24 +122,27 @@ mod governorevents {
         votes: u128,
     }
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct ProposalCanceled {
         #[key]
         id: usize,
         cancelled: bool,
     }
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct ProposalQueued {
         #[key]
         id: usize,
         eta: u64,
     }
 
-    #[derive(Model, Copy, Drop, Serde)]
+    #[derive(Copy, Drop, Serde)]
     #[dojo::event]
+    #[dojo::model]
     struct ProposalExecuted {
         #[key]
         id: usize,

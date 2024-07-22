@@ -7,7 +7,7 @@ members = [
 #    "examples/matchmaker",
 #    "examples/projectile",
     "token",
-#    "governance"
+    "governance"
 ]
 
 [workspace.package]
@@ -20,5 +20,5 @@ authors = ["bal7hazar@proton.me"]
 # cubit = { git = "https://github.com/influenceth/cubit.git" }
 cubit = { git = "https://github.com/notV4l/cubit.git", branch = "cairo_2.7" }
 dojo = { git = "https://github.com/dojoengine/dojo", tag = "v1.0.0-alpha.2" }
-#origami = { path = "crates" }
+# origami = { path = "crates" }
 token = { path = "token" }

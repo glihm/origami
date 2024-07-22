@@ -13,3 +13,7 @@ sort-module-level-items = true
 [lib]
 
 [[target.dojo]]
+
+[tool.dojo.world]
+seed = "governance"
+namespace = { default = "governance" }
