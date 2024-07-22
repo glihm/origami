@@ -16,7 +16,12 @@ mod timelock {
 
     #[abi(embed_v0)]
     impl TimelockImpl of ITimelock<ContractState> {
-        fn initialize(ref world: IWorldDispatcher, admin: ContractAddress, delay: u64) {
+        fn initialize(
+            ref world: IWorldDispatcher,
+            target_selector: felt252,
+            admin: ContractAddress,
+            delay: u64
+        ) {
             assert!(!admin.is_zero(), "Timelock::initialize: Admin address cannot be zero.");
             assert!(
                 delay >= MINIMUM_DELAY, "Timelock::initialize: Delay must exceed minimum delay."
@@ -25,31 +30,30 @@ mod timelock {
                 delay <= MAXIMUM_DELAY, "Timelock::initialize: Delay must not exceed maximum delay."
             );
 
-            let contract = get_contract_address();
-            let curr_params = get!(world, contract, TimelockParams);
+            let curr_params = get!(world, target_selector, TimelockParams);
             assert!(
                 curr_params.admin == Zeroable::zero(), "Timelock::initialize: Already initialized."
             );
-            set!(world, TimelockParams { contract, admin, delay });
+            set!(world, TimelockParams { target_selector, admin, delay });
             emit!(
                 world,
-                timelockevents::NewAdmin { contract, address: admin },
-                timelockevents::NewDelay { contract, value: delay }
+                timelockevents::NewAdmin { target_selector, address: admin },
+                timelockevents::NewDelay { target_selector, value: delay }
             );
         }
 
         fn execute_transaction(
             ref world: IWorldDispatcher,
-            target: ContractAddress,
+            target_selector: felt252,
             new_implementation: ClassHash,
             eta: u64
         ) {
-            let params = get!(world, get_contract_address(), TimelockParams);
+            let params = get!(world, target_selector, TimelockParams);
             assert!(
                 get_caller_address() == params.admin,
                 "Timelock::execute_transaction: Call must come from admin."
             );
-            let queued_tx = get!(world, (target, new_implementation), QueuedTransactions);
+            let queued_tx = get!(world, (target_selector, new_implementation), QueuedTransactions);
             assert!(
                 queued_tx.queued, "Timelock::execute_transaction: Transaction hasn't been queued."
             );
@@ -65,23 +69,25 @@ mod timelock {
             set!(
                 world,
                 QueuedTransactions {
-                    contract: target, class_hash: new_implementation, queued: false
+                    target_selector, class_hash: new_implementation, queued: false
                 }
             );
-            let upgraded_class_hash = world.upgrade_contract(target, new_implementation);
+            let upgraded_class_hash = world.upgrade_contract(target_selector, new_implementation);
             emit!(
                 world,
-                timelockevents::ExecuteTransaction { target, class_hash: upgraded_class_hash, eta }
+                timelockevents::ExecuteTransaction {
+                    target_selector, class_hash: upgraded_class_hash, eta
+                }
             );
         }
 
         fn que_transaction(
             ref world: IWorldDispatcher,
-            target: ContractAddress,
+            target_selector: felt252,
             new_implementation: ClassHash,
             eta: u64
         ) {
-            let params = get!(world, get_contract_address(), TimelockParams);
+            let params = get!(world, target_selector, TimelockParams);
             assert!(
                 get_caller_address() == params.admin,
                 "Timelock::queue_transaction: Call must come from admin."
@@ -92,23 +98,23 @@ mod timelock {
             );
             set!(
                 world,
-                QueuedTransactions {
-                    contract: target, class_hash: new_implementation, queued: true
-                }
+                QueuedTransactions { target_selector, class_hash: new_implementation, queued: true }
             );
             emit!(
                 world,
-                timelockevents::QueueTransaction { target, class_hash: new_implementation, eta }
+                timelockevents::QueueTransaction {
+                    target_selector, class_hash: new_implementation, eta
+                }
             );
         }
 
         fn cancel_transaction(
             ref world: IWorldDispatcher,
-            target: ContractAddress,
+            target_selector: felt252,
             new_implementation: ClassHash,
             eta: u64
         ) {
-            let params = get!(world, get_contract_address(), TimelockParams);
+            let params = get!(world, target_selector, TimelockParams);
             assert!(
                 get_caller_address() == params.admin,
                 "Timelock::cancel_transaction: Call must come from admin."
@@ -116,12 +122,14 @@ mod timelock {
             set!(
                 world,
                 QueuedTransactions {
-                    contract: target, class_hash: new_implementation, queued: false
+                    target_selector, class_hash: new_implementation, queued: false
                 }
             );
             emit!(
                 world,
-                timelockevents::CancelTransaction { target, class_hash: new_implementation, eta }
+                timelockevents::CancelTransaction {
+                    target_selector, class_hash: new_implementation, eta
+                }
             );
         }
     }

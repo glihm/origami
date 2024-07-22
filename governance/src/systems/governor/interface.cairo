@@ -5,13 +5,17 @@ use starknet::{ContractAddress, ClassHash};
 trait IGovernor {
     fn initialize(timelock: ContractAddress, gov_token: ContractAddress, guardian: ContractAddress);
     fn set_proposal_params(
-        quorum_votes: u128, threshold: u128, voting_delay: u64, voting_period: u64,
+        target_selector: felt252,
+        quorum_votes: u128,
+        threshold: u128,
+        voting_delay: u64,
+        voting_period: u64,
     );
-    fn propose(target: ContractAddress, class_hash: ClassHash) -> usize;
+    fn propose(target_selector: felt252, class_hash: ClassHash) -> usize;
     fn queue(proposal_id: usize);
     fn execute(proposal_id: usize);
     fn cancel(proposal_id: usize);
-    fn get_action(proposal_id: usize) -> (ContractAddress, ClassHash);
+    fn get_action(proposal_id: usize) -> (felt252, ClassHash);
     fn state(proposal_id: usize) -> ProposalState;
     fn cast_vote(proposal_id: usize, support: Support);
 }

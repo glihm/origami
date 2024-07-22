@@ -50,7 +50,7 @@ mod timelockevents {
     #[dojo::model]
     struct NewAdmin {
         #[key]
-        contract: ContractAddress,
+        target_selector: felt252,
         address: ContractAddress,
     }
 
@@ -59,7 +59,7 @@ mod timelockevents {
     #[dojo::model]
     struct NewDelay {
         #[key]
-        contract: ContractAddress,
+        target_selector: felt252,
         value: u64,
     }
 
@@ -68,7 +68,7 @@ mod timelockevents {
     #[dojo::model]
     struct CancelTransaction {
         #[key]
-        target: ContractAddress,
+        target_selector: felt252,
         class_hash: ClassHash,
         eta: u64,
     }
@@ -78,7 +78,7 @@ mod timelockevents {
     #[dojo::model]
     struct ExecuteTransaction {
         #[key]
-        target: ContractAddress,
+        target_selector: felt252,
         class_hash: ClassHash,
         eta: u64,
     }
@@ -88,7 +88,7 @@ mod timelockevents {
     #[dojo::model]
     struct QueueTransaction {
         #[key]
-        target: ContractAddress,
+        target_selector: felt252,
         class_hash: ClassHash,
         eta: u64,
     }
@@ -105,7 +105,7 @@ mod governorevents {
         #[key]
         id: usize,
         proposer: ContractAddress,
-        target: ContractAddress,
+        target_selector: felt252,
         class_hash: ClassHash,
         start_block: u64,
         end_block: u64,

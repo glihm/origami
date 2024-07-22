@@ -37,7 +37,11 @@ mod governor {
         }
 
         fn set_proposal_params(
-            quorum_votes: u128, threshold: u128, voting_delay: u64, voting_period: u64,
+            target_selector: felt252,
+            quorum_votes: u128,
+            threshold: u128,
+            voting_delay: u64,
+            voting_period: u64,
         ) {
             let world = self.world_dispatcher.read();
             let params = get!(world, get_contract_address(), GovernorParams);
@@ -46,27 +50,22 @@ mod governor {
                 "Governor::set_proposal_params: only guardian can set proposal params"
             );
             ITimelockDispatcher { contract_address: params.timelock }
-                .initialize(get_contract_address(), voting_delay);
+                .initialize(target_selector, get_contract_address(), voting_delay);
             set!(
                 world,
                 ProposalParams {
-                    contract: get_contract_address(),
-                    quorum_votes,
-                    threshold,
-                    voting_delay,
-                    voting_period
+                    target_selector, quorum_votes, threshold, voting_delay, voting_period
                 }
             );
         }
 
-        fn propose(target: ContractAddress, class_hash: ClassHash,) -> usize {
+        fn propose(target_selector: felt252, class_hash: ClassHash,) -> usize {
             let world = self.world_dispatcher.read();
-            let contract = get_contract_address();
             let caller = get_caller_address();
-            let params = get!(world, contract, ProposalParams);
+            let params = get!(world, target_selector, ProposalParams);
             let time_now = get_block_timestamp();
             let gov_token = IGovernanceTokenDispatcher {
-                contract_address: get!(world, contract, GovernorParams).gov_token
+                contract_address: get!(world, target_selector, GovernorParams).gov_token
             };
             let prior_votes = gov_token.get_prior_votes(caller, time_now - 1);
             assert!(
@@ -94,15 +93,15 @@ mod governor {
 
             let start_block = time_now + params.voting_delay;
             let end_block = start_block + params.voting_period;
-            let curr_proposal_count = get!(world, contract, ProposalCount).count;
-            set!(world, ProposalCount { contract, count: curr_proposal_count + 1 });
+            let curr_proposal_count = get!(world, target_selector, ProposalCount).count;
+            set!(world, ProposalCount { target_selector, count: curr_proposal_count + 1 });
             let proposal_id = curr_proposal_count + 1;
 
             let mut new_proposal: Proposal = Default::default();
             new_proposal.id = proposal_id;
             new_proposal.class_hash = class_hash;
             new_proposal.proposer = caller;
-            new_proposal.target = target;
+            new_proposal.target_selector = target_selector;
             new_proposal.start_block = start_block;
             new_proposal.end_block = end_block;
 
@@ -112,7 +111,12 @@ mod governor {
             emit!(
                 world,
                 governorevents::ProposalCreated {
-                    id: proposal_id, proposer: caller, target, class_hash, start_block, end_block,
+                    id: proposal_id,
+                    proposer: caller,
+                    target_selector,
+                    class_hash,
+                    start_block,
+                    end_block,
                 }
             );
             new_proposal.id
@@ -129,7 +133,7 @@ mod governor {
             let timelock_addr = get!(world, get_contract_address(), GovernorParams).timelock;
             let timelock_delay = get!(world, timelock_addr, TimelockParams).delay;
             let eta = get_block_timestamp() + timelock_delay;
-            queue_or_revert(world, proposal.target, proposal.class_hash, eta);
+            queue_or_revert(world, proposal.target_selector, proposal.class_hash, eta);
             proposal.eta = eta;
             set!(world, Proposals { id: proposal_id, proposal });
             emit!(world, governorevents::ProposalQueued { id: proposal_id, eta });
@@ -149,7 +153,8 @@ mod governor {
             let timelock = ITimelockDispatcher {
                 contract_address: get!(world, get_contract_address(), GovernorParams).timelock
             };
-            timelock.execute_transaction(proposal.target, proposal.class_hash, proposal.eta);
+            timelock
+                .execute_transaction(proposal.target_selector, proposal.class_hash, proposal.eta);
             set!(world, Proposals { id: proposal_id, proposal });
 
             emit!(world, governorevents::ProposalExecuted { id: proposal_id, executed: true });
@@ -185,15 +190,16 @@ mod governor {
             let timelock = ITimelockDispatcher {
                 contract_address: get!(world, contract, GovernorParams).timelock
             };
-            timelock.cancel_transaction(proposal.target, proposal.class_hash, proposal.eta);
+            timelock
+                .cancel_transaction(proposal.target_selector, proposal.class_hash, proposal.eta);
 
             emit!(world, governorevents::ProposalCanceled { id: proposal_id, cancelled: true });
         }
 
-        fn get_action(proposal_id: usize) -> (ContractAddress, ClassHash) {
+        fn get_action(proposal_id: usize) -> (felt252, ClassHash) {
             let world = self.world_dispatcher.read();
             let proposal = get!(world, proposal_id, Proposals).proposal;
-            (proposal.target, proposal.class_hash)
+            (proposal.target_selector, proposal.class_hash)
         }
 
         fn state(proposal_id: usize) -> ProposalState {
@@ -261,14 +267,14 @@ mod governor {
     }
 
     fn queue_or_revert(
-        world: IWorldDispatcher, target: ContractAddress, class_hash: ClassHash, eta: u64
+        world: IWorldDispatcher, target_selector: felt252, class_hash: ClassHash, eta: u64
     ) {
-        let queued_tx = get!(world, (target, class_hash), QueuedTransactions).queued;
+        let queued_tx = get!(world, (target_selector, class_hash), QueuedTransactions).queued;
         assert!(!queued_tx, "Governor::queue_or_revert: proposal action already queued at eta");
 
         let timelock = ITimelockDispatcher {
             contract_address: get!(world, get_contract_address(), GovernorParams).timelock
         };
-        timelock.que_transaction(target, class_hash, eta);
+        timelock.que_transaction(target_selector, class_hash, eta);
     }
 }
