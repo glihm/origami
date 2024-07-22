@@ -25,6 +25,9 @@ jobs:
     name: Build package
     steps:
       - uses: actions/checkout@v4
+      - uses: software-mansion/setup-scarb@v1
+        with:
+          scarb-version: ${{ env.SCARB_VERSION }}
       - uses: ./.github/actions/setup
       - name: Build
         run: |
