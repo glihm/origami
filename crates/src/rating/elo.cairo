@@ -2,8 +2,7 @@
 //! Source: https://github.com/saucepoint/elo-lib/blob/main/src/Elo.sol
 
 // Core imports
-
-use core::integer::{u32_sqrt, u64_sqrt, u128_sqrt, u256_sqrt};
+use core::num::traits::Sqrt;
 use core::integer::i128;
 
 // Constants
@@ -65,7 +64,9 @@ impl EloImpl of EloTrait {
         let order: u256 = order_felt.into() / 25;
         // [Info] Order should be less or equal to 77 to fit a u256
         let powered: u256 = PrivateTrait::pow(10, order);
-        let rooted: u16 = u32_sqrt(u64_sqrt(u128_sqrt(u256_sqrt(powered))));
+        let rooted: u16 = Sqrt::<
+            u32
+        >::sqrt(Sqrt::<u64>::sqrt(Sqrt::<u128>::sqrt(Sqrt::<u256>::sqrt(powered))));
 
         // [Compute] Change = k * (score - expectedScore)
         let k_expected_score = k.into() * MULTIPLIER / (100 + rooted.into());

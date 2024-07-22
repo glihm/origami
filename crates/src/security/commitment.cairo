@@ -1,6 +1,6 @@
 use poseidon::poseidon_hash_span;
 
-#[derive(Copy, Drop, Default, Serde, dojo::Introspect)]
+#[derive(Copy, Drop, Default, Serde)]
 struct Commitment {
     hash: felt252
 }
