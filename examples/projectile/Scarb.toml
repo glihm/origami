@@ -8,3 +8,9 @@ homepage = "https://github.com/dojoengine/origami/tree/examples/projectile"
 cubit.workspace = true
 dojo.workspace = true
 origami.workspace = true
+
+[[target.dojo]]
+
+[tool.dojo.world]
+seed = "projectile"
+namespace = { default = "projectile" }

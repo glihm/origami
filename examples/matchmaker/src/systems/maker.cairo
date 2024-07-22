@@ -36,16 +36,15 @@ mod maker {
     use dojo::world::IWorldDispatcher;
     use dojo::world::IWorldDispatcherTrait;
     use dojo::world::IWorldProvider;
-    use dojo::world::IDojoResourceProvider;
 
     // Internal imports
 
     use matchmaker::constants::WORLD;
     use matchmaker::store::{Store, StoreTrait};
-    use matchmaker::models::player::{Player, PlayerTrait, PlayerAssert};
-    use matchmaker::models::league::{League, LeagueTrait, LeagueAssert};
-    use matchmaker::models::registry::{Registry, RegistryTrait, RegistryAssert};
-    use matchmaker::models::slot::{Slot, SlotTrait};
+    use matchmaker::models::player::{Player, PlayerActions, PlayerAssert};
+    use matchmaker::models::league::{League, LeagueActions, LeagueAssert};
+    use matchmaker::models::registry::{Registry, RegistryActions, RegistryAssert};
+    use matchmaker::models::slot::{Slot, SlotActions};
 
     // Local imports
 
@@ -63,14 +62,6 @@ mod maker {
     struct Storage {}
 
     // Implementations
-
-    #[abi(embed_v0)]
-    impl DojoResourceProviderImpl of IDojoResourceProvider<ContractState> {
-        fn dojo_resource(self: @ContractState) -> felt252 {
-            'account'
-        }
-    }
-
     #[abi(embed_v0)]
     impl WorldProviderImpl of IWorldProvider<ContractState> {
         fn world(self: @ContractState) -> IWorldDispatcher {
@@ -90,7 +81,7 @@ mod maker {
             PlayerAssert::assert_not_exist(player);
 
             // [Effect] Create one
-            let player = PlayerTrait::new(0, caller, name);
+            let player = PlayerActions::new(0, caller, name);
             store.set_player(player);
         }
 
@@ -104,7 +95,7 @@ mod maker {
             PlayerAssert::assert_does_exist(player);
 
             // [Effect] Subscribe to Registry
-            let league_id = LeagueTrait::compute_id(player.rating);
+            let league_id = LeagueActions::compute_id(player.rating);
             let mut league = store.league(0, league_id);
             let mut registry = store.registry(0);
             let slot = registry.subscribe(ref league, ref player);
@@ -183,7 +174,7 @@ mod maker {
             player.fight(ref foe, seed);
 
             // [Effect] Update player, league and slot
-            let league_id = LeagueTrait::compute_id(player.rating);
+            let league_id = LeagueActions::compute_id(player.rating);
             let mut league = store.league(0, league_id);
             let slot = registry.subscribe(ref league, ref player);
             store.set_league(league);
@@ -191,7 +182,7 @@ mod maker {
             store.set_player(player);
 
             // [Effect] Update Foe, league and slot
-            let league_id = LeagueTrait::compute_id(foe.rating);
+            let league_id = LeagueActions::compute_id(foe.rating);
             let mut league = store.league(0, league_id);
             let slot = registry.subscribe(ref league, ref foe);
             store.set_league(league);

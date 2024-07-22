@@ -18,12 +18,12 @@ struct Vec2 {
     y: u32
 }
 
-trait PieceTrait {
-    fn is_out_of_board(next_position: Vec2) -> bool;
-    fn is_right_piece_move(self: @Piece, next_position: Vec2) -> bool;
-}
-
-impl PieceImpl of PieceTrait {
+// Currently, the dojo core generates a `GameTurnTrait` to expose the
+// new model API functions.
+// This may change in the future, but for now we need to change the trait
+// name here.
+#[generate_trait]
+impl MovablePieceImpl of MovablePiece {
     fn is_out_of_board(next_position: Vec2) -> bool {
         next_position.x > 7 || next_position.y > 7
     }

@@ -1,11 +1,11 @@
 [workspace]
 members = [
     "crates",
-#    "examples/chess",
-#    "examples/hex_map",
-#    "examples/market",
-#    "examples/matchmaker",
-#    "examples/projectile",
+    "examples/chess",
+    "examples/hex_map",
+    "examples/market",
+    "examples/matchmaker",
+    "examples/projectile",
     "token",
     "governance"
 ]
@@ -17,8 +17,8 @@ homepage = "https://github.com/dojoengine/origami"
 authors = ["bal7hazar@proton.me"]
 
 [workspace.dependencies]
+starknet = "2.7.0-rc.3"
 cubit = { git = "https://github.com/dojoengine/cubit", branch = "cairo_2.7" }
 dojo = { git = "https://github.com/dojoengine/dojo", tag = "v1.0.0-alpha.2" }
 origami = { path = "crates" }
 token = { path = "token" }
-starknet = "2.7.0-rc.3"

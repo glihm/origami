@@ -19,10 +19,12 @@ struct GameTurn {
     player_color: Color
 }
 
-trait GameTurnTrait {
-    fn next_turn(self: @GameTurn) -> Color;
-}
-impl GameTurnImpl of GameTurnTrait {
+// Currently, the dojo core generates a `GameTurnTrait` to expose the
+// new model API functions.
+// This may change in the future, but for now we need to change the trait
+// name here.
+#[generate_trait]
+impl GameTurnSequenceImpl of GameTurnSequence {
     fn next_turn(self: @GameTurn) -> Color {
         match self.player_color {
             Color::White => Color::Black,

@@ -17,9 +17,9 @@ trait IActions {
 
 #[dojo::contract]
 mod actions {
-    use chess::models::player::{Player, Color, PlayerTrait};
-    use chess::models::piece::{Piece, PieceType, PieceTrait};
-    use chess::models::game::{Game, GameTurn, GameTurnTrait};
+    use chess::models::player::{Player, Color, PlayerState};
+    use chess::models::piece::{Piece, PieceType, MovablePiece};
+    use chess::models::game::{Game, GameTurn, GameTurnSequence};
     use super::{ContractAddress, IActions, Vec2};
 
     #[abi(embed_v0)]
@@ -130,7 +130,7 @@ mod actions {
         ) {
             let mut current_piece = get!(world, (game_id, curr_position), (Piece));
             // check if next_position is out of board or not
-            assert!(!PieceTrait::is_out_of_board(next_position), "Should be inside board");
+            assert!(!MovablePiece::is_out_of_board(next_position), "Should be inside board");
 
             // check if this is the right move for this piece type
             assert!(

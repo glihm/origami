@@ -12,3 +12,4 @@ Please before starting, install:
 -   [foundry](https://book.getfoundry.sh/getting-started/installation) to interact with Anvil.
 -   git submodules forge-std & create3-factory.
 
+## TODO: update to Dojo 1.0.0-alpha.2+

@@ -7,3 +7,9 @@ homepage = "https://github.com/dojoengine/origami/tree/examples/market"
 [dependencies]
 cubit.workspace = true
 dojo.workspace = true
+
+[[target.dojo]]
+
+[tool.dojo.world]
+seed = "market"
+namespace = { default = "market" }

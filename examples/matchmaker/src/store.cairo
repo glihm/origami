@@ -14,10 +14,10 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
 // Models imports
 
-use matchmaker::models::league::{League, LeagueTrait};
+use matchmaker::models::league::{League, LeagueActions};
 use matchmaker::models::player::Player;
 use matchmaker::models::registry::Registry;
-use matchmaker::models::slot::{Slot, SlotTrait};
+use matchmaker::models::slot::{Slot, SlotActions};
 
 
 /// Store struct.

@@ -8,3 +8,7 @@ cubit.workspace = true
 starknet.workspace = true
 
 [lib]
+
+[tool.dojo.world]
+seed = "origami"
+namespace = { default = "origami" }

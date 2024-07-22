@@ -16,7 +16,7 @@ struct Market {
 }
 
 #[generate_trait]
-impl MarketImpl of MarketTrait {
+impl MarketActionsImpl of MarketActions {
     fn buy(self: @Market, quantity: u128) -> u128 {
         assert(quantity < *self.item_quantity, 'not enough liquidity');
         let (quantity, available, cash) = normalize(quantity, self);

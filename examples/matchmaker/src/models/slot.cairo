@@ -20,7 +20,7 @@ struct Slot {
 }
 
 #[generate_trait]
-impl SlotImpl of SlotTrait {
+impl SlotActionsImpl of SlotActions {
     #[inline(always)]
     fn new(player: Player) -> Slot {
         Slot {
@@ -45,7 +45,7 @@ mod tests {
 
     // Local imports
 
-    use super::{Slot, SlotTrait, Player, PlayerTrait, ContractAddress};
+    use super::{Slot, SlotActions, Player, PlayerTrait, ContractAddress};
 
     // Constants
 
@@ -64,7 +64,7 @@ mod tests {
         let mut player = PlayerTrait::new(REGISTRY_ID, player_id, PLAYER_NAME);
         player.league_id = LEAGUE_ID;
         player.index = INDEX;
-        let slot = SlotTrait::new(player);
+        let slot = SlotActions::new(player);
         assert_eq!(slot.registry_id, REGISTRY_ID);
         assert_eq!(slot.league_id, LEAGUE_ID);
         assert_eq!(slot.index, INDEX);

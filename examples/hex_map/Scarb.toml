@@ -8,3 +8,9 @@ homepage = "https://github.com/dojoengine/origami/tree/examples/hex_map"
 cubit.workspace = true
 dojo.workspace = true
 origami.workspace = true
+
+[[target.dojo]]
+
+[tool.dojo.world]
+seed = "hex_map"
+namespace = { default = "hex_map" }

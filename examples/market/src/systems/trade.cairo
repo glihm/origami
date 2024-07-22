@@ -12,7 +12,7 @@ trait ITrade<TContractState> {
 mod Trade {
     // Internal imports
 
-    use market::models::{item::Item, cash::Cash, market::{Market, MarketTrait}};
+    use market::models::{item::Item, cash::Cash, market::{Market, MarketActions}};
 
     // Local imports
 

@@ -6,9 +6,9 @@ use starknet::ContractAddress;
 
 use matchmaker::constants::{LEAGUE_SIZE, DEFAULT_RATING};
 use matchmaker::store::{Store, StoreTrait};
-use matchmaker::models::league::{League, LeagueTrait};
-use matchmaker::models::player::{Player, PlayerTrait, PlayerAssert};
-use matchmaker::models::slot::{Slot, SlotTrait};
+use matchmaker::models::league::{League, LeagueActions};
+use matchmaker::models::player::{Player, PlayerActions, PlayerAssert};
+use matchmaker::models::slot::{Slot, SlotActions};
 use matchmaker::helpers::bitmap::Bitmap;
 
 // Errors
@@ -28,7 +28,7 @@ struct Registry {
 }
 
 #[generate_trait]
-impl RegistryImpl of RegistryTrait {
+impl RegistryActionsImpl of RegistryActions {
     #[inline(always)]
     fn new(id: u32) -> Registry {
         Registry { id, leagues: 0 }
@@ -97,8 +97,8 @@ mod tests {
     // Local imports
 
     use super::{
-        Registry, RegistryTrait, PrivateTrait, League, LeagueTrait, Slot, SlotTrait, Player,
-        PlayerTrait, ContractAddress
+        Registry, RegistryActions, PrivateTrait, League, LeagueActions, Slot, SlotActions, Player,
+        PlayerActions, ContractAddress
     };
 
     // Constants
@@ -121,14 +121,14 @@ mod tests {
 
     #[test]
     fn test_new() {
-        let registry = RegistryTrait::new(REGISTRY_ID);
+        let registry = RegistryActions::new(REGISTRY_ID);
         assert_eq!(registry.id, REGISTRY_ID);
         assert_eq!(registry.leagues, 0);
     }
 
     #[test]
     fn test_subscribe() {
-        let mut registry = RegistryTrait::new(REGISTRY_ID);
+        let mut registry = RegistryActions::new(REGISTRY_ID);
         let mut player = PlayerTrait::new(REGISTRY_ID, PLAYER(), PLAYER_NAME);
         let mut league = LeagueTrait::new(REGISTRY_ID, LEAGUE_ID);
         registry.subscribe(ref league, ref player);
@@ -138,7 +138,7 @@ mod tests {
 
     #[test]
     fn test_unsubscribe() {
-        let mut registry = RegistryTrait::new(REGISTRY_ID);
+        let mut registry = RegistryActions::new(REGISTRY_ID);
         let mut player = PlayerTrait::new(REGISTRY_ID, PLAYER(), PLAYER_NAME);
         let mut league = LeagueTrait::new(REGISTRY_ID, LEAGUE_ID);
         registry.subscribe(ref league, ref player);
@@ -149,7 +149,7 @@ mod tests {
 
     #[test]
     fn test_search_league_same() {
-        let mut registry = RegistryTrait::new(REGISTRY_ID);
+        let mut registry = RegistryActions::new(REGISTRY_ID);
         let mut league = LeagueTrait::new(REGISTRY_ID, LEAGUE_ID);
         let mut player = PlayerTrait::new(REGISTRY_ID, PLAYER(), PLAYER_NAME);
         registry.subscribe(ref league, ref player);
@@ -162,7 +162,7 @@ mod tests {
 
     #[test]
     fn test_search_league_close() {
-        let mut registry = RegistryTrait::new(REGISTRY_ID);
+        let mut registry = RegistryActions::new(REGISTRY_ID);
         let mut league = LeagueTrait::new(REGISTRY_ID, LEAGUE_ID);
         let mut player = PlayerTrait::new(REGISTRY_ID, PLAYER(), PLAYER_NAME);
         registry.subscribe(ref league, ref player);
@@ -176,7 +176,7 @@ mod tests {
 
     #[test]
     fn test_search_league_target() {
-        let mut registry = RegistryTrait::new(REGISTRY_ID);
+        let mut registry = RegistryActions::new(REGISTRY_ID);
         let mut league = LeagueTrait::new(REGISTRY_ID, LEAGUE_ID);
         let mut player = PlayerTrait::new(REGISTRY_ID, PLAYER(), PLAYER_NAME);
         registry.subscribe(ref league, ref player);
@@ -190,7 +190,7 @@ mod tests {
 
     #[test]
     fn test_search_league_far_down_top() {
-        let mut registry = RegistryTrait::new(REGISTRY_ID);
+        let mut registry = RegistryActions::new(REGISTRY_ID);
         let mut league = LeagueTrait::new(REGISTRY_ID, LEAGUE_ID);
         let mut player = PlayerTrait::new(REGISTRY_ID, PLAYER(), PLAYER_NAME);
         registry.subscribe(ref league, ref player);
@@ -204,7 +204,7 @@ mod tests {
 
     #[test]
     fn test_search_league_far_top_down() {
-        let mut registry = RegistryTrait::new(REGISTRY_ID);
+        let mut registry = RegistryActions::new(REGISTRY_ID);
         let mut league = LeagueTrait::new(REGISTRY_ID, FAREST_LEAGUE_ID);
         let mut player = PlayerTrait::new(REGISTRY_ID, PLAYER(), PLAYER_NAME);
         registry.subscribe(ref league, ref player);
@@ -219,7 +219,7 @@ mod tests {
     #[test]
     #[should_panic(expected: ('Registry: is empty',))]
     fn test_search_league_revert_empty() {
-        let mut registry = RegistryTrait::new(REGISTRY_ID);
+        let mut registry = RegistryActions::new(REGISTRY_ID);
         let mut league = LeagueTrait::new(REGISTRY_ID, LEAGUE_ID);
         let mut player = PlayerTrait::new(REGISTRY_ID, PLAYER(), PLAYER_NAME);
         registry.subscribe(ref league, ref player);

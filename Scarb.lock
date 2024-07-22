@@ -2,6 +2,13 @@
 version = 1
 
 [[package]]
+name = "chess"
+version = "1.0.0-alpha.2"
+dependencies = [
+ "dojo",
+]
+
+[[package]]
 name = "cubit"
 version = "1.3.0"
 source = "git+https://github.com/dojoengine/cubit?branch=cairo_2.7#53020b6320a10f2ab55b661be9b8d895aca945e9"
@@ -27,10 +34,44 @@ dependencies = [
 ]
 
 [[package]]
+name = "hex_map"
+version = "0.0.0"
+dependencies = [
+ "cubit",
+ "dojo",
+ "origami",
+]
+
+[[package]]
+name = "market"
+version = "0.0.0"
+dependencies = [
+ "cubit",
+ "dojo",
+]
+
+[[package]]
+name = "matchmaker"
+version = "0.0.0"
+dependencies = [
+ "dojo",
+ "origami",
+]
+
+[[package]]
 name = "origami"
 version = "0.1.0"
 dependencies = [
  "cubit",
+]
+
+[[package]]
+name = "projectile"
+version = "0.0.0"
+dependencies = [
+ "cubit",
+ "dojo",
+ "origami",
 ]
 
 [[package]]

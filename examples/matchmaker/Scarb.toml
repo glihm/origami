@@ -7,3 +7,9 @@ homepage = "https://github.com/dojoengine/origami/tree/examples/matchmaker"
 [dependencies]
 dojo.workspace = true
 origami.workspace = true
+
+[[target.dojo]]
+
+[tool.dojo.world]
+seed = "matchmaker"
+namespace = { default = "matchmaker" }

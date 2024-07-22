@@ -17,7 +17,7 @@ mod Liquidity {
     // Internal imports
 
     use market::models::{
-        item::Item, cash::Cash, liquidity::Liquidity, market::{Market, MarketTrait}
+        item::Item, cash::Cash, liquidity::Liquidity, market::{Market, MarketActions}
     };
 
     // Local imports
