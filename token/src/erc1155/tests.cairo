@@ -32,6 +32,7 @@ use debug::PrintTrait;
 
 fn STATE() -> (IWorldDispatcher, ERC1155::ContractState) {
     let world = spawn_test_world(
+        "origami_token",
         array![
             erc_1155_meta::TEST_CLASS_HASH,
             erc_1155_operator_approval::TEST_CLASS_HASH,

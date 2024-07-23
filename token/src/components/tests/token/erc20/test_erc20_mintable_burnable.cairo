@@ -17,10 +17,10 @@ use token::components::token::erc20::erc20_mintable::erc20_mintable_component::I
 use token::components::token::erc20::erc20_burnable::erc20_burnable_component::InternalImpl as ERC20BurnableInternalImpl;
 
 use token::components::tests::mocks::erc20::erc20_mintable_burnable_mock::erc20_mintable_burnable_mock;
-use starknet::storage::{StorageMemberAccessTrait};
 
 fn STATE() -> (IWorldDispatcher, erc20_mintable_burnable_mock::ContractState) {
     let world = spawn_test_world(
+        "origami_token",
         array![erc_20_metadata_model::TEST_CLASS_HASH, erc_20_balance_model::TEST_CLASS_HASH,]
     );
 

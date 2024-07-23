@@ -6,6 +6,9 @@ use dojo::test_utils::spawn_test_world;
 use token::tests::constants::{ZERO, OWNER, SPENDER, RECIPIENT, VALUE, TOKEN_ID, TOKEN_ID_2};
 use token::tests::utils;
 
+use token::components::token::erc721::erc721_owner::{erc_721_owner_model, ERC721OwnerModel};
+use token::components::token::erc721::erc721_approval::{erc_721_token_approval_model, ERC721TokenApprovalModel};
+
 use token::components::token::erc721::erc721_balance::{erc_721_balance_model, ERC721BalanceModel};
 use token::components::token::erc721::erc721_balance::erc721_balance_component::{
     Transfer, ERC721BalanceImpl, ERC721BalanceCamelImpl, InternalImpl as ERC721BalanceInternalImpl
@@ -14,7 +17,9 @@ use token::components::token::erc721::erc721_balance::erc721_balance_component::
 use token::components::token::erc721::erc721_enumerable::{
     erc_721_enumerable_index_model, ERC721EnumerableIndexModel,
     erc_721_enumerable_owner_index_model, ERC721EnumerableOwnerIndexModel,
-    erc_721_enumerable_total_model, ERC721EnumerableTotalModel
+    erc_721_enumerable_total_model, ERC721EnumerableTotalModel,
+    erc_721_enumerable_owner_token_model, ERC721EnumerableOwnerTokenModel,
+    erc_721_enumerable_token_model, ERC721EnumerableTokenModel,
 };
 use token::components::token::erc721::erc721_enumerable::erc721_enumerable_component::{
     ERC721EnumerableImpl, InternalImpl as ERC721EnumerableInternalImpl
@@ -22,9 +27,6 @@ use token::components::token::erc721::erc721_enumerable::erc721_enumerable_compo
 use token::components::tests::mocks::erc721::erc721_enumerable_mock::{
     erc721_enumerable_mock, IERC721EnumerableMockDispatcher, IERC721EnumerableMockDispatcherTrait
 };
-
-
-use starknet::storage::{StorageMemberAccessTrait};
 
 use debug::PrintTrait;
 
@@ -34,10 +36,16 @@ use debug::PrintTrait;
 
 fn STATE() -> (IWorldDispatcher, erc721_enumerable_mock::ContractState) {
     let world = spawn_test_world(
+        "origami_token",
         array![
             erc_721_enumerable_index_model::TEST_CLASS_HASH,
             erc_721_enumerable_owner_index_model::TEST_CLASS_HASH,
-            erc_721_enumerable_total_model::TEST_CLASS_HASH
+            erc_721_enumerable_total_model::TEST_CLASS_HASH,
+            erc_721_enumerable_owner_token_model::TEST_CLASS_HASH,
+            erc_721_balance_model::TEST_CLASS_HASH,
+            erc_721_owner_model::TEST_CLASS_HASH,
+            erc_721_enumerable_token_model::TEST_CLASS_HASH,
+            erc_721_token_approval_model::TEST_CLASS_HASH,
         ]
     );
 
@@ -94,9 +102,7 @@ fn test_erc721_enumerable_owner_index() {
 #[test]
 fn test_erc721_add_token_to_owner_enumeration() {
     let (_world, mut state) = STATE();
-
     testing::set_caller_address(OWNER());
-
     state.erc721_balance.set_balance(OWNER(), 1);
     state.erc721_enumerable.add_token_to_owner_enumeration(OWNER(), TOKEN_ID);
     assert(

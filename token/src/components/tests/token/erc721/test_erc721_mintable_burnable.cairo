@@ -13,16 +13,25 @@ use token::components::token::erc721::erc721_balance::erc721_balance_component::
     ERC721BalanceImpl, InternalImpl as ERC721BalanceInternalImpl
 };
 
+use token::components::token::erc721::erc721_owner::{erc_721_owner_model, ERC721OwnerModel};
+use token::components::token::erc721::erc721_approval::{
+    erc_721_token_approval_model, ERC721TokenApprovalModel,
+};
+
 use token::components::token::erc721::erc721_mintable::erc721_mintable_component::InternalImpl as ERC721MintableInternalImpl;
 use token::components::token::erc721::erc721_burnable::erc721_burnable_component::InternalImpl as ERC721BurnableInternalImpl;
 
 use token::components::tests::mocks::erc721::erc721_mintable_burnable_mock::erc721_mintable_burnable_mock;
-use starknet::storage::{StorageMemberAccessTrait};
-
 
 fn STATE() -> (IWorldDispatcher, erc721_mintable_burnable_mock::ContractState) {
     let world = spawn_test_world(
-        array![erc_721_meta_model::TEST_CLASS_HASH, erc_721_balance_model::TEST_CLASS_HASH,]
+        "origami_token",
+        array![
+            erc_721_meta_model::TEST_CLASS_HASH,
+            erc_721_balance_model::TEST_CLASS_HASH,
+            erc_721_owner_model::TEST_CLASS_HASH,
+            erc_721_token_approval_model::TEST_CLASS_HASH,
+        ]
     );
 
     let mut state = erc721_mintable_burnable_mock::contract_state_for_testing();

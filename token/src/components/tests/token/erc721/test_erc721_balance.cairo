@@ -26,7 +26,6 @@ use token::components::tests::mocks::erc721::erc721_balance_mock::{
 };
 
 use token::components::token::erc721::erc721_mintable::erc721_mintable_component::InternalImpl as ERC721MintableInternalImpl;
-use starknet::storage::{StorageMemberAccessTrait};
 
 use token::components::tests::token::erc721::test_erc721_approval::{
     assert_event_approval, assert_only_event_approval
@@ -65,8 +64,11 @@ fn assert_only_event_transfer(
 
 fn STATE() -> (IWorldDispatcher, erc721_balance_mock::ContractState) {
     let world = spawn_test_world(
+        "origami_token",
         array![
-            erc_721_balance_model::TEST_CLASS_HASH, erc_721_token_approval_model::TEST_CLASS_HASH,
+            erc_721_balance_model::TEST_CLASS_HASH,
+            erc_721_token_approval_model::TEST_CLASS_HASH,
+            erc_721_owner_model::TEST_CLASS_HASH,
         ]
     );
 
@@ -165,10 +167,13 @@ fn test_erc721_balance_unauthorized() {
 
 fn setup() -> (IWorldDispatcher, IERC721BalanceMockDispatcher, IERC721ReceiverMockDispatcher) {
     let world = spawn_test_world(
+        "origami_token",
         array![
             erc_721_token_approval_model::TEST_CLASS_HASH,
             erc_721_balance_model::TEST_CLASS_HASH,
-            src_5_model::TEST_CLASS_HASH
+            src_5_model::TEST_CLASS_HASH,
+            erc_721_token_approval_model::TEST_CLASS_HASH,
+            erc_721_owner_model::TEST_CLASS_HASH,
         ]
     );
 
@@ -183,15 +188,15 @@ fn setup() -> (IWorldDispatcher, IERC721BalanceMockDispatcher, IERC721ReceiverMo
     // setup balance auth
     world
         .grant_writer(
-            selector!("ERC721TokenApprovalModel"), erc721_balance_mock_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721TokenApprovalModel"), erc721_balance_mock_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721BalanceModel"), erc721_balance_mock_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721BalanceModel"), erc721_balance_mock_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721OwnerModel"), erc721_balance_mock_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721OwnerModel"), erc721_balance_mock_dispatcher.contract_address
         );
 
     // initialize balance contracts
@@ -210,7 +215,7 @@ fn setup() -> (IWorldDispatcher, IERC721BalanceMockDispatcher, IERC721ReceiverMo
     };
 
     // setup erc721 receiver auth
-    world.grant_writer(selector!("SRC5Model"), erc721_receiver_mock_dispatcher.contract_address);
+    world.grant_writer(selector_from_tag!("origami_token-SRC5Model"), erc721_receiver_mock_dispatcher.contract_address);
 
     // register balance contracts
     erc721_receiver_mock_dispatcher.initializer();

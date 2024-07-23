@@ -84,7 +84,7 @@ mod erc721_enumerable_component {
     use super::ERC721EnumerableOwnerIndexModel;
     use super::ERC721EnumerableTokenModel;
     use super::ERC721EnumerableOwnerTokenModel;
-    use super::ERC721EnumerableTotalModel;
+    use super::{ERC721EnumerableTotalModel, ERC721EnumerableTotalModelTrait};
     use super::IERC721Enumerable;
     use super::IERC721EnumerableCamel;
 
@@ -185,7 +185,7 @@ mod erc721_enumerable_component {
         +Drop<TContractState>
     > of InternalTrait<TContractState> {
         fn get_total_supply(self: @ComponentState<TContractState>) -> ERC721EnumerableTotalModel {
-            get!(self.get_contract().world(), get_contract_address(), (ERC721EnumerableTotalModel))
+            ERC721EnumerableTotalModelTrait::get(self.get_contract().world(), get_contract_address())
         }
 
         fn get_token_by_index(

@@ -4,12 +4,11 @@ use dojo::test_utils::spawn_test_world;
 use token::components::introspection::src5::{src_5_model, SRC5Model, ISRC5, ISRC5_ID};
 use token::components::introspection::src5::src5_component::{InternalImpl};
 use token::components::tests::mocks::src5_mock::SRC5Mock;
-use starknet::storage::{StorageMemberAccessTrait};
 use token::tests::constants::{OTHER_ID};
 
 
 fn STATE() -> (IWorldDispatcher, SRC5Mock::ContractState) {
-    let world = spawn_test_world(array![src_5_model::TEST_CLASS_HASH,]);
+    let world = spawn_test_world("origami_token", array![src_5_model::TEST_CLASS_HASH,]);
 
     let mut state = SRC5Mock::contract_state_for_testing();
     state.world_dispatcher.write(world);

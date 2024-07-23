@@ -49,7 +49,7 @@ trait IERC721BalanceCamel<TState> {
 ///
 #[starknet::component]
 mod erc721_balance_component {
-    use super::ERC721BalanceModel;
+    use super::{ERC721BalanceModel, ERC721BalanceModelTrait};
     use super::IERC721Balance;
     use super::IERC721BalanceCamel;
 
@@ -189,8 +189,8 @@ mod erc721_balance_component {
             self: @ComponentState<TContractState>, account: ContractAddress, amount: u256
         ) {
             set!(
-                self.get_contract().world(),
-                ERC721BalanceModel { token: get_contract_address(), account, amount: amount.low }
+                (self.get_contract().world()),
+                (ERC721BalanceModel { token: get_contract_address(), account, amount: amount.low })
             );
         }
 

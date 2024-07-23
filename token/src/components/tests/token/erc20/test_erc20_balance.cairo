@@ -19,7 +19,6 @@ use token::components::token::erc20::erc20_balance::erc20_balance_component::{
 use token::components::tests::mocks::erc20::erc20_balance_mock::{
     erc20_balance_mock, IERC20BalanceMockDispatcher, IERC20BalanceMockDispatcherTrait
 };
-use starknet::storage::{StorageMemberAccessTrait};
 use token::components::tests::token::erc20::test_erc20_allowance::{
     assert_event_approval, assert_only_event_approval
 };
@@ -51,6 +50,7 @@ fn assert_only_event_transfer(
 
 fn STATE() -> (IWorldDispatcher, erc20_balance_mock::ContractState) {
     let world = spawn_test_world(
+        "origami_token",
         array![erc_20_balance_model::TEST_CLASS_HASH, erc_20_allowance_model::TEST_CLASS_HASH,]
     );
 
@@ -155,7 +155,11 @@ fn test_erc20_balance_transfer_internal_to_zero() {
 
 fn setup() -> (IWorldDispatcher, IERC20BalanceMockDispatcher) {
     let world = spawn_test_world(
-        array![erc_20_allowance_model::TEST_CLASS_HASH, erc_20_balance_model::TEST_CLASS_HASH,]
+        "origami_token",
+        array![
+            erc_20_allowance_model::TEST_CLASS_HASH,
+            erc_20_balance_model::TEST_CLASS_HASH,
+        ]
     );
 
     // deploy contract
@@ -169,11 +173,11 @@ fn setup() -> (IWorldDispatcher, IERC20BalanceMockDispatcher) {
     // setup auth
     world
         .grant_writer(
-            selector!("ERC20AllowanceModel"), erc20_balance_mock_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC20AllowanceModel"), erc20_balance_mock_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC20BalanceModel"), erc20_balance_mock_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC20BalanceModel"), erc20_balance_mock_dispatcher.contract_address
         );
 
     // should use constructor now

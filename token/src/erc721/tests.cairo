@@ -44,6 +44,7 @@ use starknet::storage::{StorageMemberAccessTrait};
 
 fn STATE() -> (IWorldDispatcher, ERC721::ContractState) {
     let world = spawn_test_world(
+        "origami_token",
         array![
             erc_721_meta::TEST_CLASS_HASH,
             erc_721_operator_approval::TEST_CLASS_HASH,

@@ -23,7 +23,6 @@ use token::components::token::erc721::erc721_owner::erc721_owner_component::{
 };
 
 use token::components::tests::mocks::erc721::erc721_approval_mock::erc721_approval_mock;
-use starknet::storage::{StorageMemberAccessTrait};
 
 use debug::PrintTrait;
 
@@ -69,6 +68,7 @@ fn assert_only_event_approval_for_all(
 
 fn STATE() -> (IWorldDispatcher, erc721_approval_mock::ContractState) {
     let world = spawn_test_world(
+        "origami_token",
         array![
             erc_721_token_approval_model::TEST_CLASS_HASH,
             erc_721_operator_approval_model::TEST_CLASS_HASH,

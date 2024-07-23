@@ -8,10 +8,9 @@ use token::components::token::erc20::erc20_metadata::erc20_metadata_component::{
     ERC20MetadataImpl, ERC20MetadataTotalSupplyImpl, ERC20MetadataTotalSupplyCamelImpl, InternalImpl
 };
 use token::components::tests::mocks::erc20::erc20_metadata_mock::erc20_metadata_mock;
-use starknet::storage::{StorageMemberAccessTrait};
 
 fn STATE() -> (IWorldDispatcher, erc20_metadata_mock::ContractState) {
-    let world = spawn_test_world(array![erc_20_metadata_model::TEST_CLASS_HASH,]);
+    let world = spawn_test_world("origami_token", array![erc_20_metadata_model::TEST_CLASS_HASH,]);
 
     let mut state = erc20_metadata_mock::contract_state_for_testing();
     state.world_dispatcher.write(world);

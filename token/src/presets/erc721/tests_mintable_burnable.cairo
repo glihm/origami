@@ -34,7 +34,6 @@ use token::presets::erc721::mintable_burnable::{
     IERC721MintableBurnablePresetDispatcherTrait
 };
 use token::presets::erc721::mintable_burnable::ERC721MintableBurnable::{ERC721InitializerImpl};
-use starknet::storage::{StorageMemberAccessTrait};
 
 use token::components::tests::token::erc721::test_erc721_approval::{
     assert_event_approval, assert_only_event_approval
@@ -50,6 +49,7 @@ use token::components::tests::token::erc721::test_erc721_balance::{
 
 fn setup_uninitialized() -> (IWorldDispatcher, IERC721MintableBurnablePresetDispatcher) {
     let world = spawn_test_world(
+        "origami_token",
         array![
             erc_721_token_approval_model::TEST_CLASS_HASH,
             erc_721_balance_model::TEST_CLASS_HASH,
@@ -68,20 +68,20 @@ fn setup_uninitialized() -> (IWorldDispatcher, IERC721MintableBurnablePresetDisp
     // setup auth
     world
         .grant_writer(
-            selector!("ERC721TokenApprovalModel"),
+            selector_from_tag!("origami_token-ERC721TokenApprovalModel"),
             erc721_mintable_burnable_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721BalanceModel"), erc721_mintable_burnable_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721BalanceModel"), erc721_mintable_burnable_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721MetadataModel"), erc721_mintable_burnable_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721MetadataModel"), erc721_mintable_burnable_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721OwnerModel"), erc721_mintable_burnable_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721OwnerModel"), erc721_mintable_burnable_dispatcher.contract_address
         );
 
     (world, erc721_mintable_burnable_dispatcher)

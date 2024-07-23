@@ -1,13 +1,13 @@
 [workspace]
 members = [
-    "crates",
+#    "crates",
     "examples/chess",
-    "examples/hex_map",
-    "examples/market",
-    "examples/matchmaker",
-    "examples/projectile",
+#    "examples/hex_map",
+#    "examples/market",
+#    "examples/matchmaker",
+#    "examples/projectile",
     "token",
-    "governance"
+#    "governance"
 ]
 
 [workspace.package]

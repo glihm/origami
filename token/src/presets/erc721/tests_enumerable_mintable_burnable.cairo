@@ -32,7 +32,6 @@ use token::presets::erc721::enumerable_mintable_burnable::{
     ERC721EnumMintBurn, IERC721EnumMintBurnPresetDispatcher,
     IERC721EnumMintBurnPresetDispatcherTrait
 };
-use starknet::storage::{StorageMemberAccessTrait};
 
 use token::components::tests::token::erc721::test_erc721_approval::{
     assert_event_approval, assert_only_event_approval
@@ -48,6 +47,7 @@ use token::components::tests::token::erc721::test_erc721_balance::{
 
 fn setup_uninitialized() -> (IWorldDispatcher, IERC721EnumMintBurnPresetDispatcher) {
     let world = spawn_test_world(
+        "origami_token",
         array![
             erc_721_token_approval_model::TEST_CLASS_HASH,
             erc_721_balance_model::TEST_CLASS_HASH,
@@ -66,44 +66,44 @@ fn setup_uninitialized() -> (IWorldDispatcher, IERC721EnumMintBurnPresetDispatch
     // setup auth
     world
         .grant_writer(
-            selector!("ERC721TokenApprovalModel"), erc721_enum_mint_burn_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721TokenApprovalModel"), erc721_enum_mint_burn_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721BalanceModel"), erc721_enum_mint_burn_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721BalanceModel"), erc721_enum_mint_burn_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721EnumerableIndexModel"),
+            selector_from_tag!("origami_token-ERC721EnumerableIndexModel"),
             erc721_enum_mint_burn_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721EnumerableOwnerIndexModel"),
+            selector_from_tag!("origami_token-ERC721EnumerableOwnerIndexModel"),
             erc721_enum_mint_burn_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721EnumerableTokenModel"),
+            selector_from_tag!("origami_token-ERC721EnumerableTokenModel"),
             erc721_enum_mint_burn_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721EnumerableOwnerTokenModel"),
+            selector_from_tag!("origami_token-ERC721EnumerableOwnerTokenModel"),
             erc721_enum_mint_burn_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721EnumerableTotalModel"),
+            selector_from_tag!("origami_token-ERC721EnumerableTotalModel"),
             erc721_enum_mint_burn_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721MetadataModel"), erc721_enum_mint_burn_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721MetadataModel"), erc721_enum_mint_burn_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC721OwnerModel"), erc721_enum_mint_burn_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721OwnerModel"), erc721_enum_mint_burn_dispatcher.contract_address
         );
 
     (world, erc721_enum_mint_burn_dispatcher)

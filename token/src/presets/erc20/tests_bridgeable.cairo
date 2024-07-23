@@ -41,7 +41,6 @@ use token::presets::erc20::bridgeable::{
     ERC20Bridgeable, IERC20BridgeablePresetDispatcher, IERC20BridgeablePresetDispatcherTrait
 };
 use token::presets::erc20::bridgeable::ERC20Bridgeable::{ERC20InitializerImpl};
-use starknet::storage::{StorageMemberAccessTrait};
 
 use token::components::tests::token::erc20::test_erc20_allowance::{
     assert_event_approval, assert_only_event_approval
@@ -57,6 +56,7 @@ use token::components::tests::token::erc20::test_erc20_balance::{
 
 fn setup() -> (IWorldDispatcher, IERC20BridgeablePresetDispatcher) {
     let world = spawn_test_world(
+        "origami_token",
         array![
             erc_20_allowance_model::TEST_CLASS_HASH,
             erc_20_balance_model::TEST_CLASS_HASH,
@@ -76,17 +76,17 @@ fn setup() -> (IWorldDispatcher, IERC20BridgeablePresetDispatcher) {
     // setup auth
     world
         .grant_writer(
-            selector!("ERC20AllowanceModel"), erc20_bridgeable_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC20AllowanceModel"), erc20_bridgeable_dispatcher.contract_address
         );
     world
-        .grant_writer(selector!("ERC20BalanceModel"), erc20_bridgeable_dispatcher.contract_address);
+        .grant_writer(selector_from_tag!("origami_token-ERC20BalanceModel"), erc20_bridgeable_dispatcher.contract_address);
     world
         .grant_writer(
-            selector!("ERC20MetadataModel"), erc20_bridgeable_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC20MetadataModel"), erc20_bridgeable_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector!("ERC20BridgeableModel"), erc20_bridgeable_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC20BridgeableModel"), erc20_bridgeable_dispatcher.contract_address
         );
 
     // initialize contracts

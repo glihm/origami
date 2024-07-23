@@ -9,12 +9,17 @@ use token::components::token::erc721::erc721_metadata::erc721_metadata_component
 };
 use token::components::token::erc721::erc721_mintable::erc721_mintable_component::InternalImpl as ERC721MintableInternalImpl;
 
-use token::components::tests::mocks::erc721::erc721_metadata_mock::erc721_metadata_mock;
-use starknet::storage::{StorageMemberAccessTrait};
+use token::components::token::erc721::erc721_balance::{erc_721_balance_model, ERC721BalanceModel,};
+use token::components::token::erc721::erc721_owner::{erc_721_owner_model, ERC721OwnerModel};
 
+use token::components::tests::mocks::erc721::erc721_metadata_mock::erc721_metadata_mock;
 
 fn STATE() -> (IWorldDispatcher, erc721_metadata_mock::ContractState) {
-    let world = spawn_test_world(array![erc_721_meta_model::TEST_CLASS_HASH,]);
+    let world = spawn_test_world("origami_token", array![
+        erc_721_meta_model::TEST_CLASS_HASH,
+        erc_721_balance_model::TEST_CLASS_HASH,
+        erc_721_owner_model::TEST_CLASS_HASH,
+    ]);
 
     let mut state = erc721_metadata_mock::contract_state_for_testing();
     state.world_dispatcher.write(world);

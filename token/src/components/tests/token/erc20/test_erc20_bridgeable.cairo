@@ -30,10 +30,10 @@ use token::components::tests::mocks::erc20::erc20_bridgeable_mock::erc20_bridgea
 use token::components::tests::mocks::erc20::erc20_bridgeable_mock::erc20_bridgeable_mock::{
     ERC20InitializerImpl
 };
-use starknet::storage::{StorageMemberAccessTrait};
 
 fn STATE() -> (IWorldDispatcher, erc20_bridgeable_mock::ContractState) {
     let world = spawn_test_world(
+        "origami_token",
         array![
             erc_20_metadata_model::TEST_CLASS_HASH,
             erc_20_balance_model::TEST_CLASS_HASH,
