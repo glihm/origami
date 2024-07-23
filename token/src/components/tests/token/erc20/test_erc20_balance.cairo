@@ -156,10 +156,7 @@ fn test_erc20_balance_transfer_internal_to_zero() {
 fn setup() -> (IWorldDispatcher, IERC20BalanceMockDispatcher) {
     let world = spawn_test_world(
         "origami_token",
-        array![
-            erc_20_allowance_model::TEST_CLASS_HASH,
-            erc_20_balance_model::TEST_CLASS_HASH,
-        ]
+        array![erc_20_allowance_model::TEST_CLASS_HASH, erc_20_balance_model::TEST_CLASS_HASH,]
     );
 
     // deploy contract
@@ -173,11 +170,13 @@ fn setup() -> (IWorldDispatcher, IERC20BalanceMockDispatcher) {
     // setup auth
     world
         .grant_writer(
-            selector_from_tag!("origami_token-ERC20AllowanceModel"), erc20_balance_mock_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC20AllowanceModel"),
+            erc20_balance_mock_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector_from_tag!("origami_token-ERC20BalanceModel"), erc20_balance_mock_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC20BalanceModel"),
+            erc20_balance_mock_dispatcher.contract_address
         );
 
     // should use constructor now

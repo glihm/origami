@@ -49,6 +49,7 @@ use token::components::tests::token::erc20::test_erc20_balance::{
     assert_event_transfer, assert_only_event_transfer
 };
 
+use token::components::security::initializable::initializable_model;
 
 //
 // Setup
@@ -62,6 +63,7 @@ fn setup() -> (IWorldDispatcher, IERC20BridgeablePresetDispatcher) {
             erc_20_balance_model::TEST_CLASS_HASH,
             erc_20_metadata_model::TEST_CLASS_HASH,
             erc_20_bridgeable_model::TEST_CLASS_HASH,
+            initializable_model::TEST_CLASS_HASH,
         ]
     );
 
@@ -73,21 +75,10 @@ fn setup() -> (IWorldDispatcher, IERC20BridgeablePresetDispatcher) {
             )
     };
 
-    // setup auth
-    world
-        .grant_writer(
-            selector_from_tag!("origami_token-ERC20AllowanceModel"), erc20_bridgeable_dispatcher.contract_address
-        );
-    world
-        .grant_writer(selector_from_tag!("origami_token-ERC20BalanceModel"), erc20_bridgeable_dispatcher.contract_address);
-    world
-        .grant_writer(
-            selector_from_tag!("origami_token-ERC20MetadataModel"), erc20_bridgeable_dispatcher.contract_address
-        );
-    world
-        .grant_writer(
-            selector_from_tag!("origami_token-ERC20BridgeableModel"), erc20_bridgeable_dispatcher.contract_address
-        );
+    world.grant_owner(starknet::get_contract_address(), dojo::utils::hash(@"origami_token"));
+    world.grant_owner(OWNER(), dojo::utils::hash(@"origami_token"));
+    world.grant_owner(BRIDGE(), dojo::utils::hash(@"origami_token"));
+    world.grant_owner(SPENDER(), dojo::utils::hash(@"origami_token"));
 
     // initialize contracts
     erc20_bridgeable_dispatcher.initializer("NAME", "SYMBOL", SUPPLY, OWNER(), BRIDGE());

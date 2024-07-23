@@ -15,7 +15,7 @@ trait IERC20BridgeableMockInit<TState> {
 #[dojo::contract]
 mod erc20_bridgeable_mock {
     use starknet::ContractAddress;
-    use starknet::{get_caller_address, get_contract_address};
+    use starknet::get_caller_address;
 
     use token::components::security::initializable::initializable_component;
 
@@ -115,7 +115,7 @@ mod erc20_bridgeable_mock {
             l2_bridge_address: ContractAddress,
         ) {
             assert(
-                self.world().is_owner(get_caller_address(), get_contract_address().into()),
+                self.world().is_owner(get_caller_address(), self.selector()),
                 Errors::CALLER_IS_NOT_OWNER
             );
 

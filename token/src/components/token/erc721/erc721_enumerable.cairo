@@ -185,7 +185,9 @@ mod erc721_enumerable_component {
         +Drop<TContractState>
     > of InternalTrait<TContractState> {
         fn get_total_supply(self: @ComponentState<TContractState>) -> ERC721EnumerableTotalModel {
-            ERC721EnumerableTotalModelTrait::get(self.get_contract().world(), get_contract_address())
+            ERC721EnumerableTotalModelTrait::get(
+                self.get_contract().world(), get_contract_address()
+            )
         }
 
         fn get_token_by_index(

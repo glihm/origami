@@ -7,7 +7,9 @@ use token::tests::constants::{ZERO, OWNER, SPENDER, RECIPIENT, VALUE, TOKEN_ID, 
 use token::tests::utils;
 
 use token::components::token::erc721::erc721_owner::{erc_721_owner_model, ERC721OwnerModel};
-use token::components::token::erc721::erc721_approval::{erc_721_token_approval_model, ERC721TokenApprovalModel};
+use token::components::token::erc721::erc721_approval::{
+    erc_721_token_approval_model, ERC721TokenApprovalModel
+};
 
 use token::components::token::erc721::erc721_balance::{erc_721_balance_model, ERC721BalanceModel};
 use token::components::token::erc721::erc721_balance::erc721_balance_component::{

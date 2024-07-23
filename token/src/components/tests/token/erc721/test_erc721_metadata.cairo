@@ -15,11 +15,14 @@ use token::components::token::erc721::erc721_owner::{erc_721_owner_model, ERC721
 use token::components::tests::mocks::erc721::erc721_metadata_mock::erc721_metadata_mock;
 
 fn STATE() -> (IWorldDispatcher, erc721_metadata_mock::ContractState) {
-    let world = spawn_test_world("origami_token", array![
-        erc_721_meta_model::TEST_CLASS_HASH,
-        erc_721_balance_model::TEST_CLASS_HASH,
-        erc_721_owner_model::TEST_CLASS_HASH,
-    ]);
+    let world = spawn_test_world(
+        "origami_token",
+        array![
+            erc_721_meta_model::TEST_CLASS_HASH,
+            erc_721_balance_model::TEST_CLASS_HASH,
+            erc_721_owner_model::TEST_CLASS_HASH,
+        ]
+    );
 
     let mut state = erc721_metadata_mock::contract_state_for_testing();
     state.world_dispatcher.write(world);

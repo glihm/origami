@@ -3,9 +3,11 @@ use starknet::ContractAddress;
 
 use integer::BoundedInt;
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
+use dojo::contract::{IContractDispatcherTrait, IContractDispatcher};
 use dojo::test_utils::spawn_test_world;
 use token::tests::constants::{ZERO, OWNER, SPENDER, RECIPIENT, BRIDGE, DECIMALS, SUPPLY, VALUE};
 
+use token::components::token::erc20::erc20_allowance::{erc_20_allowance_model, ERC20AllowanceModel};
 use token::components::token::erc20::erc20_metadata::{erc_20_metadata_model, ERC20MetadataModel,};
 use token::components::token::erc20::erc20_metadata::erc20_metadata_component::{
     ERC20MetadataImpl, ERC20MetadataTotalSupplyImpl, InternalImpl as ERC20MetadataInternalImpl
@@ -31,18 +33,30 @@ use token::components::tests::mocks::erc20::erc20_bridgeable_mock::erc20_bridgea
     ERC20InitializerImpl
 };
 
+use token::components::security::initializable::initializable_model;
+
 fn STATE() -> (IWorldDispatcher, erc20_bridgeable_mock::ContractState) {
     let world = spawn_test_world(
         "origami_token",
         array![
             erc_20_metadata_model::TEST_CLASS_HASH,
             erc_20_balance_model::TEST_CLASS_HASH,
-            erc_20_bridgeable_model::TEST_CLASS_HASH
+            erc_20_bridgeable_model::TEST_CLASS_HASH,
+            erc_20_allowance_model::TEST_CLASS_HASH,
+            initializable_model::TEST_CLASS_HASH,
         ]
     );
 
+    // Deploy the contract to ensure the selector is a known resource.
+    world
+        .deploy_contract(
+            'salt', erc20_bridgeable_mock::TEST_CLASS_HASH.try_into().unwrap(), array![].span(),
+        );
+
     let mut state = erc20_bridgeable_mock::contract_state_for_testing();
     state.world_dispatcher.write(world);
+    world
+        .grant_owner(starknet::get_contract_address(), dojo::contract::IContract::selector(@state));
 
     (world, state)
 }
@@ -75,6 +89,7 @@ fn test_erc20_bridgeable_bridge_can_mint() {
     let mut state = setup();
 
     testing::set_caller_address(BRIDGE());
+
     state.mint(RECIPIENT(), VALUE);
 
     assert(state.balance_of(RECIPIENT()) == VALUE, 'Should eq VALUE');

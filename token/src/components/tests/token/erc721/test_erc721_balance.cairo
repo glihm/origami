@@ -188,15 +188,18 @@ fn setup() -> (IWorldDispatcher, IERC721BalanceMockDispatcher, IERC721ReceiverMo
     // setup balance auth
     world
         .grant_writer(
-            selector_from_tag!("origami_token-ERC721TokenApprovalModel"), erc721_balance_mock_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721TokenApprovalModel"),
+            erc721_balance_mock_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector_from_tag!("origami_token-ERC721BalanceModel"), erc721_balance_mock_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721BalanceModel"),
+            erc721_balance_mock_dispatcher.contract_address
         );
     world
         .grant_writer(
-            selector_from_tag!("origami_token-ERC721OwnerModel"), erc721_balance_mock_dispatcher.contract_address
+            selector_from_tag!("origami_token-ERC721OwnerModel"),
+            erc721_balance_mock_dispatcher.contract_address
         );
 
     // initialize balance contracts
@@ -215,7 +218,11 @@ fn setup() -> (IWorldDispatcher, IERC721BalanceMockDispatcher, IERC721ReceiverMo
     };
 
     // setup erc721 receiver auth
-    world.grant_writer(selector_from_tag!("origami_token-SRC5Model"), erc721_receiver_mock_dispatcher.contract_address);
+    world
+        .grant_writer(
+            selector_from_tag!("origami_token-SRC5Model"),
+            erc721_receiver_mock_dispatcher.contract_address
+        );
 
     // register balance contracts
     erc721_receiver_mock_dispatcher.initializer();
